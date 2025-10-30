@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using DemoMVC.Models;
 
 namespace AlunoMvc.Data
 {
@@ -9,5 +10,6 @@ namespace AlunoMvc.Data
             : base(options)
         {
         }
+        public DbSet<DemoMVC.Models.Aluno> Aluno { get; set; } = default!;
     }
 }
