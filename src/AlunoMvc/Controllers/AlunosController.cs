@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using AlunoMvc.Data;
 using DemoMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlunoMvc.Controllers
 {
+    [Authorize]
     [Route("meus-alunos")]
     public class AlunosController : Controller
     {
@@ -15,6 +17,7 @@ namespace AlunoMvc.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Aluno.ToListAsync());
