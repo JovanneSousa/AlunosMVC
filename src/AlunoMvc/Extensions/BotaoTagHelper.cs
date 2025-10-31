@@ -8,9 +8,12 @@ namespace AlunoMvc.Extensions
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public BotaoTagHelper(IHttpContextAccessor contextAccessor)
+        private readonly LinkGenerator _linkGenerator;
+
+        public BotaoTagHelper(IHttpContextAccessor contextAccessor, LinkGenerator linkGenerator)
         {
             _contextAccessor = contextAccessor;
+            _linkGenerator = linkGenerator;
         }
 
         [HtmlAttributeName("tipo-botao")]
@@ -19,41 +22,54 @@ namespace AlunoMvc.Extensions
         [HtmlAttributeName("route-id")]
         public int RouteId { get; set; }
 
-        private string NomeAction;
-        private string NomeClasse;
-        private string SpanIcone;
+        private string nomeAction;
+        private string nomeClasse;
+        private string spanIcone;
 
         public override void Process (TagHelperContext context, TagHelperOutput output)
         {
             switch (TipoBotaoSelecao)
             {
                 case TipoBotao.Detalhes:
-                    NomeAction = "detalhes";
-                    NomeClasse = "btn btn-info";
-                    SpanIcone = "fa fa-search";
+                    nomeAction = "detalhes";
+                    nomeClasse = "btn btn-info";
+                    spanIcone = "fa fa-search";
                     break;
                 case TipoBotao.Editar:
-                    NomeAction = "editar";
-                    NomeClasse = "btn btn-warning";
-                    SpanIcone = "fa fa-pencil-alt";
+                    nomeAction = "editar";
+                    nomeClasse = "btn btn-warning";
+                    spanIcone = "fa fa-pencil-alt";
                     break;
                 case TipoBotao.Excluir:
-                    NomeAction = "deletar";
-                    NomeClasse = "btn btn-danger";
-                    SpanIcone = "fa fa-trash";
+                    nomeAction = "deletar";
+                    nomeClasse = "btn btn-danger";
+                    spanIcone = "fa fa-trash";
                     break;
             }
 
-            string controller = _contextAccessor.HttpContext.GetRouteData().Values["controller"].ToString().ToLower();
+            var controller = _contextAccessor.HttpContext?.GetRouteData().Values["controller"]?.ToString();
+
+            var host = $"{_contextAccessor.HttpContext.Request.Scheme}://" +
+                $"{_contextAccessor.HttpContext.Request.Host.Value}";
+
+            var indexPath = _linkGenerator.GetPathByAction(
+                _contextAccessor.HttpContext,
+                nomeAction,
+                controller,
+                values: new { id = RouteId }
+                )!;
+
+            Console.WriteLine(host);
+            Console.WriteLine(indexPath);
 
             output.TagName = "a";
-            output.Attributes.SetAttribute("href", $"{controller}/{NomeAction}/{RouteId}");
-            output.Attributes.SetAttribute("class", NomeClasse);
+            output.Attributes.SetAttribute("href", $"{host}{indexPath}");
+            output.Attributes.SetAttribute("class", nomeClasse);
 
-            var IconSpan = new TagBuilder("span");
-            IconSpan.AddCssClass(SpanIcone);
+            var iconSpan = new TagBuilder("span");
+            iconSpan.AddCssClass(spanIcone);
 
-            output.Content.AppendHtml(IconSpan);
+            output.Content.AppendHtml(iconSpan);
         }
     }
 

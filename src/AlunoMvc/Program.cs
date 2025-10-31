@@ -1,10 +1,17 @@
 using AlunoMvc.Data;
+using AlunoMvc.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//builder.Services.AddRouting(options =>
+//    options.ConstraintMap["slugify"] = typeof(RouteSlugifyParameterTransformer));
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -15,8 +22,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
@@ -38,6 +43,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "blog/{controller:slugify=Home}/{action:slugify=Index}/{id?}");
+
 
 app.MapControllerRoute(
     name: "default",
