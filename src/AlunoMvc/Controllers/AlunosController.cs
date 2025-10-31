@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace AlunoMvc.Controllers
 {
     [Authorize]
-    [Route("meus-alunos")]
+    [Route("alunos")]
     public class AlunosController : Controller
     {
         private readonly ApplicationDbContext _context;

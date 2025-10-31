@@ -49,11 +49,16 @@
                 @Html.DisplayFor(modelItem => item.Ativo)
             </td>
             <td>
-                <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id"><span class="fa fa-search"></span></a>
+                <botao tipo-botao="Detalhes" route-id="item.Id"></botao>
+                <botao tipo-botao="Editar" route-id="item.Id"></botao>
+                <botao tipo-botao="Excluir" route-id="item.Id"></botao>
+               @*  <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id"><span class="fa fa-search"></span></a>
                 <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-pencil-alt"></span></a> 
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><span class="fa fa-trash"></span></a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><span class="fa fa-trash"></span></a> *@
             </td>
         </tr>
 }
     </tbody>
 </table>
+<vc:counter model-counter="@Model.Count()"></vc:counter>
+@* @await Component.InvokeAsync("Counter", Model.Count()); *@
