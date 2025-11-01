@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.CodeAnalysis;
 
 namespace AlunoMvc.Extensions
 {
@@ -47,7 +48,10 @@ namespace AlunoMvc.Extensions
                     break;
             }
 
-            var controller = _contextAccessor.HttpContext?.GetRouteData().Values["controller"]?.ToString();
+            var endpoint = _contextAccessor.HttpContext?.GetEndpoint();
+            var controller = endpoint.Metadata
+                .OfType<Microsoft.AspNetCore.Mvc.RouteAttribute>()
+                .FirstOrDefault()?.Template;
 
             var host = $"{_contextAccessor.HttpContext.Request.Scheme}://" +
                 $"{_contextAccessor.HttpContext.Request.Host.Value}";
@@ -58,9 +62,6 @@ namespace AlunoMvc.Extensions
                 controller,
                 values: new { id = RouteId }
                 )!;
-
-            Console.WriteLine(host);
-            Console.WriteLine(indexPath);
 
             output.TagName = "a";
             output.Attributes.SetAttribute("href", $"{host}{indexPath}");
