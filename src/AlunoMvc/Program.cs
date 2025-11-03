@@ -44,9 +44,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "blog/{controller:slugify=Home}/{action:slugify=Index}/{id?}");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:slugify=exists}/{controller:slugify=Home}/{action:slugify=Index}/{id?}");
 
 
 app.MapControllerRoute(

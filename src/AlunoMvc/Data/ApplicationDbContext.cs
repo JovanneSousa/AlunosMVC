@@ -11,5 +11,6 @@ namespace AlunoMvc.Data
         {
         }
         public DbSet<DemoMVC.Models.Aluno> Aluno { get; set; } = default!;
+        public DbSet<DemoMVC.Models.Produto> Produto { get; set; } = default!;
     }
 }

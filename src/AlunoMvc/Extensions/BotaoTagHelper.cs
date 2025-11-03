@@ -42,7 +42,7 @@ namespace AlunoMvc.Extensions
                     spanIcone = "fa fa-pencil-alt";
                     break;
                 case TipoBotao.Excluir:
-                    nomeAction = "deletar";
+                    nomeAction = "excluir";
                     nomeClasse = "btn btn-danger";
                     spanIcone = "fa fa-trash";
                     break;
