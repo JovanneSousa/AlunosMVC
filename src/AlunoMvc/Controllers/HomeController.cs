@@ -1,20 +1,33 @@
 using System.Diagnostics;
+using AlunoMvc.Configuration;
 using AlunoMvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace AlunoMvc.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IConfiguration _configuration;
+        private readonly ApiConfig _config;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            IConfiguration configuration, 
+            IOptions<ApiConfig> apiConfig)
         {
             _logger = logger;
+            _config = apiConfig.Value;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
         {
+            ApiConfig apiConfig = new ApiConfig();
+            _configuration.GetSection(ApiConfig.ConfigName).Bind(apiConfig);
+
+            string secret = apiConfig.UserSecret;
             return View();
         }
 
@@ -23,10 +36,35 @@ namespace AlunoMvc.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("erro/{id:length(3,3)}")]
+        public IActionResult Errors(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var modelErro = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                modelErro.Mensagem = "Ocorreu um erro! Tente novamente mais tarde ou contate nosso suporte";
+                modelErro.Titulo = "Ocorreu um erro!";
+                modelErro.ErroCode = id;
+            }
+            else if (id == 404)
+            {
+                modelErro.Mensagem = "A página que está procurando não existe! <br />Em caso de dúvida";
+                modelErro.Titulo = "Ops! Página não encontrada.";
+                modelErro.ErroCode = id;
+            }
+            else if (id == 403)
+            {
+                modelErro.Mensagem = "Você não tem permissão para fazer isto.";
+                modelErro.Titulo = "Acesso negado";
+                modelErro.ErroCode = id;
+            }
+            else
+            {
+                return StatusCode(500);
+            } 
+
+            return View("Error", modelErro);
         }
     }
 }

@@ -1,10 +1,21 @@
-﻿namespace DemoMVC.Models
+﻿using AlunoMvc.Extensions;
+using System.ComponentModel.DataAnnotations;
+
+namespace DemoMVC.Models
 {
     public class Produto
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Nome { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Imagem { get; set; }
-        public string? Valor { get; set; }
+
+        [Moeda]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public decimal? Valor { get; set; }
     }
 }
